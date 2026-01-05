@@ -1,6 +1,7 @@
 package NewHostelLayer.HostelLayer.ServiceImpl;
 
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryFilterRequest;
+import NewHostelLayer.HostelLayer.DTO.HostelInquiryResponse;
 import NewHostelLayer.HostelLayer.Entity.HostelInquiry;
 import NewHostelLayer.HostelLayer.Pagination.InquirySpecification;
 import NewHostelLayer.HostelLayer.Repository.InquiryRepository;
@@ -58,69 +59,97 @@ public class InquiryServiceImpl implements InquiryService
                 .orElseThrow(() -> new RuntimeException("Inquiry not found"));
     }
 
-    @Override
-    public Page<HostelInquiry> getAllInquiries(String role, String email, HostelInquiryFilterRequest filter,
-            String timeFrame, LocalDate customStartDate, LocalDate customEndDate, int page, int size)
-    {
 
-        if (!staffService.hasPermission(role, email, "Get")) {
-            throw new RuntimeException("You don't have permission to view Inquiries");
-        }
+        @Override
+        public HostelInquiryResponse getAllInquiries(String role, String email, HostelInquiryFilterRequest filter,
+                                                     String timeFrame, LocalDate customStartDate, LocalDate customEndDate, int page, int size)
+        {
+            if (!staffService.hasPermission(role, email, "Get")) {
+                throw new RuntimeException("You don't have permission to view Inquiries");
+            }
 
-        String branchCode = staffService.fetchBranchCodeByRole(role, email);
+            String branchCode = staffService.fetchBranchCodeByRole(role, email);
 
-        LocalDate startDate = null;
-        LocalDate endDate = null;
-        LocalDate today = LocalDate.now();
+            LocalDate startDate = null;
+            LocalDate endDate = null;
+            LocalDate today = LocalDate.now();
 
-        if (timeFrame != null) {
-            switch (timeFrame.toLowerCase()) {
+            if (timeFrame != null) {
+                switch (timeFrame.toLowerCase()) {
 
-                case "today" -> {
-                    startDate = today;
-                    endDate = today;
-                }
+                    case "today" -> {
+                        startDate = today;
+                        endDate = today;
+                    }
 
-                case "7days" -> {
-                    startDate = today.minusDays(6);
-                    endDate = today;
-                }
+                    case "7days" -> {
+                        startDate = today.minusDays(6);
+                        endDate = today;
+                    }
 
-                case "30days" -> {
-                    startDate = today.minusDays(29);
-                    endDate = today;
-                }
+                    case "30days" -> {
+                        startDate = today.minusDays(29);
+                        endDate = today;
+                    }
 
-                case "365days" -> {
-                    startDate = today.minusDays(364);
-                    endDate = today;
-                }
+                    case "365days" -> {
+                        startDate = today.minusDays(364);
+                        endDate = today;
+                    }
 
-                case "custom" -> {
-                    startDate = customStartDate;
-                    endDate = customEndDate;
+                    case "custom" -> {
+                        startDate = customStartDate;
+                        endDate = customEndDate;
+                    }
                 }
             }
+
+            Specification<HostelInquiry> specification =
+                    InquirySpecification.withFilters(
+                            branchCode,
+                            filter.getRoomType(),
+                            filter.getBedType(),
+                            filter.getDistrict(),
+                            filter.getState(),
+                            filter.getCurrentStatus(),
+                            startDate,
+                            endDate
+                    );
+            Pageable pageable =
+                    PageRequest.of(page, size, Sort.by("inquiryDate").descending());
+
+            Page<HostelInquiry> inquiryPage =
+                    inquiryRepository.findAll(specification, pageable);
+
+
+            long totalInquiries =
+                    inquiryRepository.count(specification);
+
+            Map<String, Long> statusWiseCount = new HashMap<>();
+
+            List<Object[]> statusCountResult =
+                    inquiryRepository.countByStatus(
+                            branchCode,
+                            startDate,
+                            endDate,
+                            filter.getRoomType(),
+                            filter.getBedType(),
+                            filter.getDistrict(),
+                            filter.getState()
+                    );
+
+            for (Object[] row : statusCountResult) {
+                String status = (String) row[0];
+                Long count = (Long) row[1];
+                statusWiseCount.put(status, count);
+            }
+
+            return new HostelInquiryResponse(
+                    totalInquiries,
+                    statusWiseCount,
+                    inquiryPage
+            );
         }
-
-        Specification<HostelInquiry> specification =
-                InquirySpecification.withFilters(
-                        branchCode,
-                        filter.getRoomType(),
-                        filter.getBedType(),
-                        filter.getDistrict(),
-                        filter.getState(),
-                        filter.getCurrentStatus(),
-                        startDate,
-                        endDate
-                );
-
-        Pageable pageable =
-                PageRequest.of(page, size, Sort.by("inquiryDate").descending());
-
-        return inquiryRepository.findAll(specification, pageable);
-    }
-
 
     @Override
     public HostelInquiry updateInquiry(Long id, String role, String email, HostelInquiry updatedInquiry) {

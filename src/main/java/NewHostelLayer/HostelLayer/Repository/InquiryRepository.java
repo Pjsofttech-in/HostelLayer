@@ -63,4 +63,26 @@ public interface InquiryRepository extends JpaRepository<HostelInquiry,Long>, Jp
     List<Object[]> countBySource(
             @Param("branchCode") String branchCode
     );
+
+    @Query("""
+    SELECT i.currentStatus, COUNT(i)
+    FROM HostelInquiry i
+    WHERE i.branchCode = :branchCode
+      AND (:startDate IS NULL OR i.inquiryDate BETWEEN :startDate AND :endDate)
+      AND (:roomType IS NULL OR i.roomType = :roomType)
+      AND (:bedType IS NULL OR i.bedType = :bedType)
+      AND (:district IS NULL OR i.district = :district)
+      AND (:state IS NULL OR i.state = :state)
+    GROUP BY i.currentStatus
+""")
+    List<Object[]> countByStatus(
+            String branchCode,
+            LocalDate startDate,
+            LocalDate endDate,
+            String roomType,
+            String bedType,
+            String district,
+            String state
+    );
+
 }

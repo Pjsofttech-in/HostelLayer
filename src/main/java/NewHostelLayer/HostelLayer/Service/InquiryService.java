@@ -1,6 +1,7 @@
 package NewHostelLayer.HostelLayer.Service;
 
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryFilterRequest;
+import NewHostelLayer.HostelLayer.DTO.HostelInquiryResponse;
 import NewHostelLayer.HostelLayer.Entity.HostelInquiry;
 import org.springframework.data.domain.Page;
 
@@ -14,8 +15,8 @@ public interface InquiryService
 
     HostelInquiry getInquiryById(Long id, String role, String email);
 
-    Page<HostelInquiry> getAllInquiries(String role, String email, HostelInquiryFilterRequest filter,
-                                        String timeFrame, LocalDate customStartDate, LocalDate customEndDate, int page, int size);
+    HostelInquiryResponse getAllInquiries(String role, String email, HostelInquiryFilterRequest filter,
+                                          String timeFrame, LocalDate customStartDate, LocalDate customEndDate, int page, int size);
 
     HostelInquiry updateInquiry(Long id, String role, String email, HostelInquiry inquiry);
 

@@ -1,6 +1,7 @@
 package NewHostelLayer.HostelLayer.Controller;
 
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryFilterRequest;
+import NewHostelLayer.HostelLayer.DTO.HostelInquiryResponse;
 import NewHostelLayer.HostelLayer.Entity.HostelInquiry;
 import NewHostelLayer.HostelLayer.Service.InquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class InquiryController
     }
 
     @PostMapping("/getAllHostelInquiry")
-    public ResponseEntity<Page<HostelInquiry>> getAllInquiries(
+    public ResponseEntity<HostelInquiryResponse> getAllInquiries(
             @RequestParam String role,
             @RequestParam String email,
             @RequestParam(required = false) LocalDate startDate,
@@ -44,9 +45,9 @@ public class InquiryController
             @RequestParam(defaultValue = "10") int size,
             @RequestBody HostelInquiryFilterRequest filter
     ) {
-        return ResponseEntity.ok(
-                inquiryService.getAllInquiries(role, email, filter,timeFrame,startDate,endDate, page, size)
-        );
+        HostelInquiryResponse inquiryResponse = inquiryService.getAllInquiries(role, email, filter,timeFrame,startDate,endDate, page, size);
+
+        return ResponseEntity.ok(inquiryResponse);
     }
 
 
