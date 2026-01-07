@@ -63,6 +63,9 @@ public class HostelRegistrationForm
     private String remark;
     private String status;
     private LocalDate admissionDate;
+    private String addressProofType;
+    private String educationProofType;
+
 
     @Email
     private String createdByEmail;

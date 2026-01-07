@@ -59,6 +59,9 @@ public class HostelRegistrationRequestDTO
     private String status;
     private LocalDate admissionDate;
 
+    private String addressProofType;
+    private String educationProofType;
+
     private String createdByEmail;
     private String role;
     private String branchCode;

@@ -18,9 +18,6 @@ public class HostelDocuments
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String addressProofType;
-    private String educationProofType;
-
     private String personalPhoto;
     private String addressProofFile;
     private String educationProofFile;

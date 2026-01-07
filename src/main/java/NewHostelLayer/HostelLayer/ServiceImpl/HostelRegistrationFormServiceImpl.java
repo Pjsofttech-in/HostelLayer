@@ -288,6 +288,12 @@ public class HostelRegistrationFormServiceImpl implements HostelRegistrationForm
         if (request.getStatus() != null)
             existing.setStatus(request.getStatus());
 
+        if(request.getAddressProofType() != null)
+            existing.setAddressProofType(request.getAddressProofType());
+
+        if(request.getEducationProofType() != null)
+            existing.setEducationProofType(request.getEducationProofType());
+
         if (request.getAdmissionDate() != null)
             existing.setAdmissionDate(request.getAdmissionDate());
 
