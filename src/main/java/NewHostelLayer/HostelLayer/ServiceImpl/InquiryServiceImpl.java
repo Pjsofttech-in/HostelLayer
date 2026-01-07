@@ -325,8 +325,7 @@ public class InquiryServiceImpl implements InquiryService
         for (Month month : Month.values())
         {
             Map<String, Object> map = new HashMap<>();
-            map.put("month", month.name());
-//            map.put("monthNumber", month.getValue());
+            map.put("month", month.name().substring(0, 3));
             map.put("inquiryCount", monthCountMap.getOrDefault(month.getValue(), 0L));
             response.add(map);
         }
