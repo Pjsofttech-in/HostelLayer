@@ -2,6 +2,7 @@ package NewHostelLayer.HostelLayer.Controller;
 
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryFilterRequest;
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryResponse;
+import NewHostelLayer.HostelLayer.DTO.InquiryToRegistrationDTO;
 import NewHostelLayer.HostelLayer.Entity.HostelInquiry;
 import NewHostelLayer.HostelLayer.Service.InquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,4 +108,13 @@ public class InquiryController
     {
         return ResponseEntity.ok(inquiryService.getInquiryCountBySource(role,email));
     }
+
+
+    @GetMapping("/inquiryForRegistration")
+    public ResponseEntity<InquiryToRegistrationDTO> prefillRegistration(@RequestParam Long id,
+                                                                        @RequestParam String role,
+                                                                        @RequestParam String email) {
+        return ResponseEntity.ok(inquiryService.getInquiryForRegistration(role,email,id));
+    }
+
 }

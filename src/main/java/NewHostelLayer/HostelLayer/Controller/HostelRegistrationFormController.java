@@ -31,7 +31,7 @@ public class HostelRegistrationFormController
             @RequestParam String email,
 
             @RequestPart("data") String dataJson,
-
+            @RequestParam(value = "inquiryId",required = false) Long inquiryId,
             @RequestPart(value = "personalPhoto", required = false) MultipartFile personalPhoto,
             @RequestPart(value = "addressProofFile", required = false) MultipartFile addressProofFile,
             @RequestPart(value = "educationProofFile", required = false) MultipartFile educationProofFile,
@@ -46,7 +46,7 @@ public class HostelRegistrationFormController
 
         HostelRegistrationRequestDTO response =
                 registrationFormService.saveOrUpdateRegistration(
-                        role, email, data,
+                        role, email,inquiryId, data,
                         personalPhoto,
                         addressProofFile,
                         educationProofFile,

@@ -65,7 +65,7 @@ public class HostelRegistrationForm
     private LocalDate admissionDate;
     private String addressProofType;
     private String educationProofType;
-
+    private Long inquiryId;
 
     @Email
     private String createdByEmail;

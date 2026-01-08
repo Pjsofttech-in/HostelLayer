@@ -2,6 +2,7 @@ package NewHostelLayer.HostelLayer.ServiceImpl;
 
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryFilterRequest;
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryResponse;
+import NewHostelLayer.HostelLayer.DTO.InquiryToRegistrationDTO;
 import NewHostelLayer.HostelLayer.Entity.HostelInquiry;
 import NewHostelLayer.HostelLayer.Pagination.InquirySpecification;
 import NewHostelLayer.HostelLayer.Repository.InquiryRepository;
@@ -29,6 +30,7 @@ public class InquiryServiceImpl implements InquiryService
 
     @Autowired
     private StaffService staffService;
+
 
     @Override
     public HostelInquiry createInquiry(String role, String email, HostelInquiry inquiry) {
@@ -310,8 +312,7 @@ public class InquiryServiceImpl implements InquiryService
 
         String branchCode = staffService.fetchBranchCodeByRole(role, email);
 
-        List<Object[]> dbResult =
-                inquiryRepository.countMonthWiseByYear(branchCode, year);
+        List<Object[]> dbResult = inquiryRepository.countMonthWiseByYear(branchCode, year);
 
         Map<Integer, Long> monthCountMap = new HashMap<>();
         for (Object[] row : dbResult)
@@ -332,6 +333,39 @@ public class InquiryServiceImpl implements InquiryService
 
         return response;
     }
+
+    @Override
+    public InquiryToRegistrationDTO getInquiryForRegistration(String role, String email,Long inquiryId)
+    {
+        if(!staffService.hasPermission(role,email,"GET"))
+        {
+            throw new RuntimeException("You Don't have permission to Get Data");
+        }
+
+        HostelInquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new RuntimeException("Inquiry not found"));
+
+        InquiryToRegistrationDTO dto = new InquiryToRegistrationDTO();
+
+        dto.setInquiryId(inquiryId);
+        dto.setFullName(inquiry.getStudentName());
+        dto.setGender(inquiry.getGender());
+        dto.setEmail(inquiry.getEmail());
+        dto.setParentsMobNo(inquiry.getFatherMobileNo());
+        dto.setPermanentAddress(inquiry.getAddress());
+        dto.setCity(inquiry.getCity());
+        dto.setState(inquiry.getState());
+        dto.setPincode(inquiry.getPincode());
+        dto.setCourseEnrolled(inquiry.getCourseOfStudy());
+        dto.setRoomType(inquiry.getRoomType());
+        dto.setBedType(inquiry.getBedType());
+        dto.setCreatedByEmail(inquiry.getCreatedByEmail());
+        dto.setBranchCode(inquiry.getBranchCode());
+        dto.setRole(inquiry.getRole());
+
+        return dto;
+    }
+
 
 
     @Override

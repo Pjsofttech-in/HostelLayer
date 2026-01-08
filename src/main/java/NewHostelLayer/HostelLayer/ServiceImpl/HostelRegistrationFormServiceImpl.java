@@ -1,6 +1,7 @@
 package NewHostelLayer.HostelLayer.ServiceImpl;
 
 import NewHostelLayer.HostelLayer.DTO.*;
+import NewHostelLayer.HostelLayer.Entity.HostelInquiry;
 import NewHostelLayer.HostelLayer.Entity.HostelRegistrationForm;
 import NewHostelLayer.HostelLayer.Entity.HostelDocuments;
 import NewHostelLayer.HostelLayer.Entity.HostelGuardianMedical;
@@ -9,7 +10,9 @@ import NewHostelLayer.HostelLayer.Pagination.HostelRegistrationSpecification;
 import NewHostelLayer.HostelLayer.Repository.HostelRegistrationFormRepository;
 import NewHostelLayer.HostelLayer.Repository.HostelDocumentsRepository;
 import NewHostelLayer.HostelLayer.Repository.HostelGuardianMedicalRepository;
+import NewHostelLayer.HostelLayer.Repository.InquiryRepository;
 import NewHostelLayer.HostelLayer.Service.HostelRegistrationFormService;
+import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +38,9 @@ public class HostelRegistrationFormServiceImpl implements HostelRegistrationForm
     HostelDocumentsRepository documentsRepository;
 
     @Autowired
+    InquiryRepository inquiryRepository;
+
+    @Autowired
     HostelGuardianMedicalRepository guardianMedicalRepository;
 
     @Autowired
@@ -44,7 +50,7 @@ public class HostelRegistrationFormServiceImpl implements HostelRegistrationForm
     HostelRegistrationMapper mapper;
 
     @Override
-    public HostelRegistrationRequestDTO saveOrUpdateRegistration(String role, String email,
+    public HostelRegistrationRequestDTO saveOrUpdateRegistration(String role, String email, @Nullable Long inquiryId,
             HostelRegistrationRequestDTO data, MultipartFile personalPhoto,
             MultipartFile addressProofFile, MultipartFile educationProofFile,
             MultipartFile signature, MultipartFile parentSignature)
@@ -64,6 +70,14 @@ public class HostelRegistrationFormServiceImpl implements HostelRegistrationForm
             entity.setCreatedByEmail(email);
             entity.setBranchCode(branchCode);
 
+            if(inquiryId != null)
+            {
+                entity.setInquiryId(inquiryId);
+                HostelInquiry inquiry = inquiryRepository.findById(inquiryId)
+                        .orElseThrow(()-> new RuntimeException("Inquiry Not Found"));
+                inquiry.setRegister(true);
+
+            }
         }
         else {
 
@@ -114,7 +128,7 @@ public class HostelRegistrationFormServiceImpl implements HostelRegistrationForm
         LocalDate endDate = LocalDate.now();
 
         if (dateRange != null) {
-            switch (dateRange) {
+            switch (dateRange.toUpperCase()) {
                 case "TODAY" -> startDate = LocalDate.now();
                 case "7DAYS" -> startDate = LocalDate.now().minusDays(7);
                 case "30DAYS" -> startDate = LocalDate.now().minusDays(30);

@@ -2,6 +2,7 @@ package NewHostelLayer.HostelLayer.Service;
 
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryFilterRequest;
 import NewHostelLayer.HostelLayer.DTO.HostelInquiryResponse;
+import NewHostelLayer.HostelLayer.DTO.InquiryToRegistrationDTO;
 import NewHostelLayer.HostelLayer.Entity.HostelInquiry;
 import org.springframework.data.domain.Page;
 
@@ -29,4 +30,6 @@ public interface InquiryService
     List<Map<String, Object>> getInquiryCountByYear(String role, String email, int year);
 
     List<Map<String, Object>> getInquiryCountBySource(String role, String email);
+
+    InquiryToRegistrationDTO getInquiryForRegistration(String role, String email, Long inquiryId);
 }

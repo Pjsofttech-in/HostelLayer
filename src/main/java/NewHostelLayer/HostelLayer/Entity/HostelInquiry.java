@@ -26,11 +26,8 @@ public class HostelInquiry
     private String email;
     private String address;
     private String gender;
-
     private String city;
-
     private String taluka;
-
     private String district;
     private String state;
 
@@ -48,9 +45,10 @@ public class HostelInquiry
     private String conductedBy;
     private String monthName;
     private String year;
-
+    private boolean isRegister = false;
     @Email
     private String createdByEmail;
     private String branchCode;
     private String role;
+
 }
