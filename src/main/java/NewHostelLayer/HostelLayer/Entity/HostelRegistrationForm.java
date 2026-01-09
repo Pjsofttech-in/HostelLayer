@@ -48,7 +48,7 @@ public class HostelRegistrationForm
     private String stayFrom;
     private String stayTo;
 
-    private String floor;
+    private Integer floorNumber;
     private String roomNumber;
     private String bedType;
     private String bedNumber;

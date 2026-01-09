@@ -46,6 +46,7 @@ public class FloorServiceImpl implements FloorService
         HostelFloor existing = floorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Hostel Floor not found with id: " + id));
 
+
         existing.setFloorNumber(floor.getFloorNumber());
         existing.setHostelBuildingName(floor.getHostelBuildingName());
         existing.setRooms(floor.getRooms());

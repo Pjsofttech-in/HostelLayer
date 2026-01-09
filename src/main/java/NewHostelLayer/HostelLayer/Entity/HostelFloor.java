@@ -24,7 +24,7 @@ public class HostelFloor
     private String hostelBuildingName;
 
     @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, orphanRemoval = true)
+            fetch = FetchType.LAZY)
     private List<HostelRoom> rooms;
 
     private Boolean active = true;

@@ -14,6 +14,7 @@ public class HostelBedResponseDTO
 {
     private Long id;
     private String bedNumber;
+    private String bedType;
     private BedStatus status;
     private Long roomId;
 

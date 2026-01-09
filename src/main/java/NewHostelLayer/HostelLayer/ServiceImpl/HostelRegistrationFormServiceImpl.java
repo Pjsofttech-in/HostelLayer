@@ -266,8 +266,8 @@ public class HostelRegistrationFormServiceImpl implements HostelRegistrationForm
         if (request.getStayTo() != null)
             existing.setStayTo(request.getStayTo());
 
-        if (request.getFloor() != null)
-            existing.setFloor(request.getFloor());
+        if (request.getFloorNumber() != null)
+            existing.setFloorNumber(request.getFloorNumber());
 
         if (request.getRoomNumber() != null)
             existing.setRoomNumber(request.getRoomNumber());

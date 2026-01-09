@@ -17,7 +17,8 @@ public class HostelBed
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String bedNumber; // A, B, C, D
+    private String bedNumber;// A, B, C, D
+    private String bedType;
 
     @Email
     private String createdByEmail;

@@ -41,7 +41,7 @@ public class HostelRegistrationMapper
 
         entity.setStayFrom(dto.getStayFrom());
         entity.setStayTo(dto.getStayTo());
-        entity.setFloor(dto.getFloor());
+        entity.setFloorNumber(dto.getFloorNumber());
         entity.setRoomNumber(dto.getRoomNumber());
         entity.setBedType(dto.getBedType());
         entity.setBedNumber(dto.getBedNumber());
@@ -108,7 +108,7 @@ public class HostelRegistrationMapper
 
         dto.setStayFrom(entity.getStayFrom());
         dto.setStayTo(entity.getStayTo());
-        dto.setFloor(entity.getFloor());
+        dto.setFloorNumber(entity.getFloorNumber());
         dto.setRoomNumber(entity.getRoomNumber());
         dto.setBedType(entity.getBedType());
         dto.setBedNumber(entity.getBedNumber());
@@ -168,7 +168,7 @@ public class HostelRegistrationMapper
 
         dto.setStayFrom(entity.getStayFrom());
         dto.setStayTo(entity.getStayTo());
-        dto.setFloor(entity.getFloor());
+        dto.setFloorNumber(entity.getFloorNumber());
         dto.setRoomNumber(entity.getRoomNumber());
         dto.setBedType(entity.getBedType());
         dto.setBedNumber(entity.getBedNumber());

@@ -54,7 +54,10 @@ public class BedServiceImpl implements BedService
         {
             exising.setRoom(bed.getRoom());
         }
-
+        if(bed.getBedType()!=null)
+        {
+            exising.setBedType(bed.getBedType());
+        }
         HostelBed bed1 = bedRepository.save(exising);
         return mapToDTO(bed1);
     }
@@ -124,6 +127,7 @@ public class BedServiceImpl implements BedService
         dto.setId(bed.getId());
         dto.setBedNumber(bed.getBedNumber());
         dto.setStatus(bed.getStatus());
+        dto.setBedType(bed.getBedType());
         dto.setCreatedByEmail(bed.getCreatedByEmail());
         dto.setRole(bed.getRole());
         dto.setBranchCode(bed.getBranchCode());

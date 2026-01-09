@@ -31,7 +31,7 @@ public class HostelRoom
     private HostelFloor floor;
 
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<HostelBed> beds;
 
     @Email
