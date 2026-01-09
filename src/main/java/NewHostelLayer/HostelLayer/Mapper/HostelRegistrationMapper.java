@@ -56,6 +56,8 @@ public class HostelRegistrationMapper
         entity.setRemark(dto.getRemark());
         entity.setStatus(dto.getStatus());
         entity.setAdmissionDate(dto.getAdmissionDate());
+        entity.setEducationProofType(dto.getEducationProofType());
+        entity.setAddressProofType(dto.getAddressProofType());
 
         entity.setCreatedByEmail(dto.getCreatedByEmail());
         entity.setRole(dto.getRole());
@@ -122,6 +124,10 @@ public class HostelRegistrationMapper
         dto.setStatus(entity.getStatus());
         dto.setAdmissionDate(entity.getAdmissionDate());
 
+        dto.setEducationProofType(entity.getEducationProofType());
+        dto.setAddressProofType(entity.getAddressProofType());
+
+
         dto.setCreatedByEmail(entity.getCreatedByEmail());
         dto.setBranchCode(entity.getBranchCode());
         dto.setRole(entity.getRole());
@@ -177,6 +183,8 @@ public class HostelRegistrationMapper
         dto.setRemark(entity.getRemark());
         dto.setStatus(entity.getStatus());
         dto.setAdmissionDate(entity.getAdmissionDate());
+        dto.setEducationProofType(entity.getEducationProofType());
+        dto.setAddressProofType(entity.getAddressProofType());
 
         dto.setCreatedByEmail(entity.getCreatedByEmail());
         dto.setBranchCode(entity.getBranchCode());
