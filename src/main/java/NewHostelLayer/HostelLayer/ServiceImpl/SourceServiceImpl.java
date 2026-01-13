@@ -45,7 +45,7 @@ public class SourceServiceImpl implements SourceService
         HostelSource existing = sourceRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("Source Not Found"));
 
-        existing.setSourceName(source.getSourceName());
+        existing.setSource(source.getSource());
 
         return sourceRepository.save(existing);
 

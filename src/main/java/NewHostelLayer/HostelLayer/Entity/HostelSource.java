@@ -22,7 +22,7 @@ public class HostelSource
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sourceName;
+    private String source;
     @Email
     private String createdByEmail;
     private String role;
