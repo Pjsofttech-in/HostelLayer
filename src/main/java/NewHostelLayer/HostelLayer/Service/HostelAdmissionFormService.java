@@ -16,26 +16,46 @@ import java.util.List;
 
 public interface HostelAdmissionFormService {
 
-    // Create Admission Form
     HostelAdmissionResponseDTO createAdmissionForm(
+            String role,
+            String email,
             HostelAdmissionRequestDTO requestDTO,
-            MultipartFile authorizedSignature);
+            MultipartFile authorizedSignature
+    );
 
-    // Get All Admission Forms
-    List<HostelAdmissionResponseDTO> getAllAdmissions();
 
-    // Get Admission Form By ID
-    HostelAdmissionResponseDTO getAdmissionById(Long id);
+    List<HostelAdmissionResponseDTO> getAllAdmissions(
+            String role,
+            String email
+    );
 
-    HostelAdmissionSummaryDTO getAdmissionSummary();
 
-    // Update Admission Form
+    HostelAdmissionResponseDTO getAdmissionById(
+            Long id,
+            String role,
+            String email
+    );
+
+
+
+    HostelAdmissionSummaryDTO getAdmissionSummary(
+            String role,
+            String email
+    );
+
+
     HostelAdmissionResponseDTO updateAdmission(
             Long id,
+            String role,
+            String email,
             HostelAdmissionRequestDTO requestDTO,
-            MultipartFile authorizedSignature);
+            MultipartFile authorizedSignature
+    );
+
 
     Page<HostelAdmissionResponseDTO> filterAdmissions(
+            String role,
+            String email,
             DateRange dateRange,
             LocalDate startDate,
             LocalDate endDate,
@@ -44,10 +64,12 @@ public interface HostelAdmissionFormService {
             BedType bedType,
             String paymentMode,
             PaymentStatus paymentStatus,
-            Pageable pageable
-    );
+            Pageable pageable);
 
-    // Delete Admission Form
-    void deleteAdmission(Long id);
+
+    void deleteAdmission(
+            Long id,
+            String role,
+            String email);
 
 }

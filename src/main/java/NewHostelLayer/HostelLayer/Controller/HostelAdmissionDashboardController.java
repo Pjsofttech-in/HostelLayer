@@ -4,16 +4,12 @@ import NewHostelLayer.HostelLayer.DTO.HostelAdmissionDashboardResponseDTO;
 import NewHostelLayer.HostelLayer.DTO.HostelAdmissionDateWiseDataDTO;
 import NewHostelLayer.HostelLayer.DTO.HostelAdmissionMonthWiseDataDTO;
 import NewHostelLayer.HostelLayer.DTO.HostelAdmissionTimeframeDataDTO;
-import NewHostelLayer.HostelLayer.Enum.DashboardType;
 import NewHostelLayer.HostelLayer.Service.HostelAdmissionDashboardService;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,10 +22,12 @@ public class HostelAdmissionDashboardController {
 
 
     @GetMapping("/summary")
-    public ResponseEntity<HostelAdmissionDashboardResponseDTO> getDashboardSummary() {
+    public ResponseEntity<HostelAdmissionDashboardResponseDTO> getDashboardSummary(
+            @RequestParam String role,
+            @RequestParam String email) {
 
         return ResponseEntity.ok(
-                dashboardService.getDashboardSummary()
+                dashboardService.getDashboardSummary(role, email)
         );
     }
 
@@ -37,30 +35,35 @@ public class HostelAdmissionDashboardController {
     @GetMapping("/date-wise")
     public ResponseEntity<List<HostelAdmissionDateWiseDataDTO>> getDateWiseData(
             @RequestParam Integer month,
-            @RequestParam Integer year) {
+            @RequestParam Integer year,
+            @RequestParam String role,
+            @RequestParam String email) {
 
         return ResponseEntity.ok(
-                dashboardService.getDateWiseData(month, year)
+                dashboardService.getDateWiseData(month, year, role, email)
         );
     }
 
 
-
     @GetMapping("/timeframe")
-    public ResponseEntity<List<HostelAdmissionTimeframeDataDTO>> getTimeframeData() {
+    public ResponseEntity<List<HostelAdmissionTimeframeDataDTO>> getTimeframeData(
+            @RequestParam String role,
+            @RequestParam String email) {
 
         return ResponseEntity.ok(
-                dashboardService.getTimeframeData()
+                dashboardService.getTimeframeData(role, email)
         );
     }
 
 
     @GetMapping("/month-wise")
     public ResponseEntity<List<HostelAdmissionMonthWiseDataDTO>> getMonthWiseData(
-            @RequestParam Integer year) {
+            @RequestParam Integer year,
+            @RequestParam String role,
+            @RequestParam String email) {
 
         return ResponseEntity.ok(
-                dashboardService.getMonthWiseData(year)
+                dashboardService.getMonthWiseData(year, role, email)
         );
     }
 

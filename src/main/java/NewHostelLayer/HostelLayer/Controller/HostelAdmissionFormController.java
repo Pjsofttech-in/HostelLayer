@@ -29,7 +29,6 @@ public class HostelAdmissionFormController {
     private final ObjectMapper objectMapper;
 
 
-    // Create Admission Form
     @PostMapping("/createAdmissionForm")
     public ResponseEntity<HostelAdmissionResponseDTO> createAdmissionForm(
 
@@ -38,52 +37,88 @@ public class HostelAdmissionFormController {
             @RequestParam(
                     value = "authorizedSignature",
                     required = false
-            ) MultipartFile authorizedSignature
+            ) MultipartFile authorizedSignature,
+
+            @RequestParam String role,
+
+            @RequestParam String email
 
     ) throws Exception {
 
         HostelAdmissionRequestDTO requestDTO =
                 objectMapper.readValue(
                         admissionFormJson,
-                        HostelAdmissionRequestDTO.class);
+                        HostelAdmissionRequestDTO.class
+                );
 
         return ResponseEntity.ok(
                 hostelAdmissionFormService.createAdmissionForm(
+                        role,
+                        email,
                         requestDTO,
-                        authorizedSignature));
+                        authorizedSignature
+                )
+        );
     }
 
 
-    // Get All Admission Forms
     @GetMapping("/getAllAdmissionForms")
-    public ResponseEntity<List<HostelAdmissionResponseDTO>> getAllAdmissions() {
+    public ResponseEntity<List<HostelAdmissionResponseDTO>> getAllAdmissions(
+
+            @RequestParam String role,
+
+            @RequestParam String email
+
+    ) {
 
         return ResponseEntity.ok(
-                hostelAdmissionFormService.getAllAdmissions()
+                hostelAdmissionFormService.getAllAdmissions(
+                        role,
+                        email
+                )
         );
     }
 
 
-    // Get Admission Form By ID
     @GetMapping("/getAdmissionFormById/{id}")
-    public ResponseEntity<HostelAdmissionResponseDTO> getAdmissionById(@PathVariable Long id) {
+    public ResponseEntity<HostelAdmissionResponseDTO> getAdmissionById(
+
+            @PathVariable Long id,
+
+            @RequestParam String role,
+
+            @RequestParam String email
+
+    ) {
 
         return ResponseEntity.ok(
-                hostelAdmissionFormService.getAdmissionById(id)
+                hostelAdmissionFormService.getAdmissionById(
+                        id,
+                        role,
+                        email
+                )
         );
     }
 
-    // ================= ADMISSION SUMMARY =================
 
     @GetMapping("/getAdmissionSummary")
-    public ResponseEntity<HostelAdmissionSummaryDTO> getAdmissionSummary() {
+    public ResponseEntity<HostelAdmissionSummaryDTO> getAdmissionSummary(
+
+            @RequestParam String role,
+
+            @RequestParam String email
+
+    ) {
 
         return ResponseEntity.ok(
-                hostelAdmissionFormService.getAdmissionSummary()
+                hostelAdmissionFormService.getAdmissionSummary(
+                        role,
+                        email
+                )
         );
     }
 
-    // Update Admission Form
+
     @PutMapping("/updateAdmissionForm/{id}")
     public ResponseEntity<HostelAdmissionResponseDTO> updateAdmission(
 
@@ -93,8 +128,12 @@ public class HostelAdmissionFormController {
 
             @RequestParam(
                     value = "authorizedSignature",
-                    required = false)
-            MultipartFile authorizedSignature
+                    required = false
+            ) MultipartFile authorizedSignature,
+
+            @RequestParam String role,
+
+            @RequestParam String email
 
     ) throws Exception {
 
@@ -107,14 +146,21 @@ public class HostelAdmissionFormController {
         return ResponseEntity.ok(
                 hostelAdmissionFormService.updateAdmission(
                         id,
+                        role,
+                        email,
                         requestDTO,
                         authorizedSignature
                 )
         );
     }
 
+
     @GetMapping("/filterAdmissionForms")
     public ResponseEntity<Page<HostelAdmissionResponseDTO>> filterAdmissions(
+
+            @RequestParam String role,
+
+            @RequestParam String email,
 
             @RequestParam(required = false)
             DateRange dateRange,
@@ -155,6 +201,8 @@ public class HostelAdmissionFormController {
 
         return ResponseEntity.ok(
                 hostelAdmissionFormService.filterAdmissions(
+                        role,
+                        email,
                         dateRange,
                         startDate,
                         endDate,
@@ -169,12 +217,22 @@ public class HostelAdmissionFormController {
     }
 
 
-    // Delete Admission Form
     @DeleteMapping("/deleteAdmissionForm/{id}")
     public ResponseEntity<String> deleteAdmission(
-            @PathVariable Long id) {
 
-        hostelAdmissionFormService.deleteAdmission(id);
+            @PathVariable Long id,
+
+            @RequestParam String role,
+
+            @RequestParam String email
+
+    ) {
+
+        hostelAdmissionFormService.deleteAdmission(
+                id,
+                role,
+                email
+        );
 
         return ResponseEntity.ok(
                 "Hostel admission deleted successfully"

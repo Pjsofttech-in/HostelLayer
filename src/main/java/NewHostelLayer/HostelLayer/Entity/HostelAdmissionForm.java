@@ -99,4 +99,11 @@ public class HostelAdmissionForm {
 
     // Authorized Signature
     private String authorizedSignature;
+
+    @Email
+    private String createdByEmail;
+
+    private String branchCode;
+
+    private String role;
 }

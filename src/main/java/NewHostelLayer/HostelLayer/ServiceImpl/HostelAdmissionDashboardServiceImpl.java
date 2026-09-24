@@ -6,7 +6,6 @@ import NewHostelLayer.HostelLayer.DTO.HostelAdmissionDateWiseDataDTO;
 import NewHostelLayer.HostelLayer.DTO.HostelAdmissionMonthWiseDataDTO;
 import NewHostelLayer.HostelLayer.DTO.HostelAdmissionTimeframeDataDTO;
 import NewHostelLayer.HostelLayer.Entity.HostelAdmissionForm;
-import NewHostelLayer.HostelLayer.Enum.DashboardType;
 import NewHostelLayer.HostelLayer.Enum.PaymentStatus;
 import NewHostelLayer.HostelLayer.Repository.HostelAdmissionFormRepository;
 import NewHostelLayer.HostelLayer.Service.HostelAdmissionDashboardService;
@@ -19,6 +18,7 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,16 +27,26 @@ public class HostelAdmissionDashboardServiceImpl
 
     private final HostelAdmissionFormRepository admissionFormRepository;
 
+    private final StaffService staffService;
 
-    // =========================================================
-    // DASHBOARD SUMMARY
-    // =========================================================
+
 
     @Override
-    public HostelAdmissionDashboardResponseDTO getDashboardSummary() {
+    public HostelAdmissionDashboardResponseDTO getDashboardSummary(
+            String role,
+            String email) {
+
+        if (!staffService.hasPermission(role, email, "Get")) {
+            throw new RuntimeException(
+                    "You don't have permission to view Admission Dashboard"
+            );
+        }
+
+        String branchCode =
+                staffService.fetchBranchCodeByRole(role, email);
 
         List<HostelAdmissionForm> admissions =
-                admissionFormRepository.findAll();
+                getAdmissionsByBranch(branchCode);
 
         LocalDate today = LocalDate.now();
 
@@ -86,20 +96,7 @@ public class HostelAdmissionDashboardServiceImpl
     }
 
 
-    // =========================================================
-    // COMMON DATE RANGE CALCULATION
-    // =========================================================
 
-    /**
-     * Calculates admission count and revenue
-     * for the given date range.
-     *
-     * Admissions:
-     * PAID + PENDING + CANCELLED + REFUNDED
-     *
-     * Revenue:
-     * PAID only
-     */
     private DashboardMetricDTO calculateMetric(
             List<HostelAdmissionForm> admissions,
             LocalDate startDate,
@@ -117,8 +114,6 @@ public class HostelAdmissionDashboardServiceImpl
                 continue;
             }
 
-            // Check whether admission date
-            // is inside requested range.
             if (admissionDate.isBefore(startDate)
                     || admissionDate.isAfter(endDate)) {
                 continue;
@@ -138,7 +133,6 @@ public class HostelAdmissionDashboardServiceImpl
 
             // Revenue only from PAID admissions
             if (paymentStatus == PaymentStatus.PAID) {
-
                 revenue += getRevenue(admission);
             }
         }
@@ -150,13 +144,7 @@ public class HostelAdmissionDashboardServiceImpl
     }
 
 
-    // =========================================================
-    // TOTAL CALCULATION
-    // =========================================================
 
-    /**
-     * Calculates all-time admissions and revenue.
-     */
     private DashboardMetricDTO calculateTotalMetric(
             List<HostelAdmissionForm> admissions) {
 
@@ -179,7 +167,6 @@ public class HostelAdmissionDashboardServiceImpl
 
             // Revenue only from PAID admissions
             if (paymentStatus == PaymentStatus.PAID) {
-
                 revenue += getRevenue(admission);
             }
         }
@@ -191,17 +178,24 @@ public class HostelAdmissionDashboardServiceImpl
     }
 
 
-    // =========================================================
-    // DATE-WISE DATA
-    // =========================================================
-
     @Override
     public List<HostelAdmissionDateWiseDataDTO> getDateWiseData(
             Integer month,
-            Integer year) {
+            Integer year,
+            String role,
+            String email) {
+
+        if (!staffService.hasPermission(role, email, "Get")) {
+            throw new RuntimeException(
+                    "You don't have permission to view Admission Dashboard"
+            );
+        }
+
+        String branchCode =
+                staffService.fetchBranchCodeByRole(role, email);
 
         List<HostelAdmissionForm> admissions =
-                admissionFormRepository.findAll();
+                getAdmissionsByBranch(branchCode);
 
         List<HostelAdmissionDateWiseDataDTO> result =
                 new ArrayList<>();
@@ -247,7 +241,6 @@ public class HostelAdmissionDashboardServiceImpl
 
                 // Revenue only from PAID admissions
                 if (paymentStatus == PaymentStatus.PAID) {
-
                     revenue += getRevenue(admission);
                 }
             }
@@ -265,15 +258,22 @@ public class HostelAdmissionDashboardServiceImpl
     }
 
 
-    // =========================================================
-    // TIMEFRAME DATA
-    // =========================================================
-
     @Override
-    public List<HostelAdmissionTimeframeDataDTO> getTimeframeData() {
+    public List<HostelAdmissionTimeframeDataDTO> getTimeframeData(
+            String role,
+            String email) {
+
+        if (!staffService.hasPermission(role, email, "Get")) {
+            throw new RuntimeException(
+                    "You don't have permission to view Admission Dashboard"
+            );
+        }
+
+        String branchCode =
+                staffService.fetchBranchCodeByRole(role, email);
 
         List<HostelAdmissionForm> admissions =
-                admissionFormRepository.findAll();
+                getAdmissionsByBranch(branchCode);
 
         LocalDate today = LocalDate.now();
 
@@ -281,7 +281,7 @@ public class HostelAdmissionDashboardServiceImpl
                 new ArrayList<>();
 
 
-        // TODAY
+
         DashboardMetricDTO todayMetric =
                 calculateMetric(
                         admissions,
@@ -298,7 +298,7 @@ public class HostelAdmissionDashboardServiceImpl
         );
 
 
-        // LAST 7 DAYS
+
         DashboardMetricDTO last7DaysMetric =
                 calculateMetric(
                         admissions,
@@ -315,7 +315,7 @@ public class HostelAdmissionDashboardServiceImpl
         );
 
 
-        // LAST 30 DAYS
+
         DashboardMetricDTO last30DaysMetric =
                 calculateMetric(
                         admissions,
@@ -332,7 +332,6 @@ public class HostelAdmissionDashboardServiceImpl
         );
 
 
-        // LAST 365 DAYS
         DashboardMetricDTO last365DaysMetric =
                 calculateMetric(
                         admissions,
@@ -352,16 +351,24 @@ public class HostelAdmissionDashboardServiceImpl
     }
 
 
-    // =========================================================
-    // MONTH-WISE DATA
-    // =========================================================
 
     @Override
     public List<HostelAdmissionMonthWiseDataDTO> getMonthWiseData(
-            Integer year){
+            Integer year,
+            String role,
+            String email) {
+
+        if (!staffService.hasPermission(role, email, "Get")) {
+            throw new RuntimeException(
+                    "You don't have permission to view Admission Dashboard"
+            );
+        }
+
+        String branchCode =
+                staffService.fetchBranchCodeByRole(role, email);
 
         List<HostelAdmissionForm> admissions =
-                admissionFormRepository.findAll();
+                getAdmissionsByBranch(branchCode);
 
         List<HostelAdmissionMonthWiseDataDTO> result =
                 new ArrayList<>();
@@ -404,7 +411,6 @@ public class HostelAdmissionDashboardServiceImpl
 
                 // Revenue only from PAID admissions
                 if (paymentStatus == PaymentStatus.PAID) {
-
                     revenue += getRevenue(admission);
                 }
             }
@@ -422,14 +428,24 @@ public class HostelAdmissionDashboardServiceImpl
     }
 
 
-    // =========================================================
-    // COMMON HELPER METHODS
-    // =========================================================
+    private List<HostelAdmissionForm> getAdmissionsByBranch(
+            String branchCode) {
 
-    /**
-     * Checks whether the payment status
-     * should be counted as an admission.
-     */
+        List<HostelAdmissionForm> admissions =
+                admissionFormRepository.findAll();
+
+        return admissions.stream()
+                .filter(admission ->
+                        branchCode != null
+                                && branchCode.equals(
+                                admission.getBranchCode()
+                        )
+                )
+                .collect(Collectors.toList());
+    }
+
+
+
     private boolean isValidAdmissionStatus(
             PaymentStatus paymentStatus) {
 
@@ -440,10 +456,6 @@ public class HostelAdmissionDashboardServiceImpl
     }
 
 
-    /**
-     * Returns revenue amount for an admission.
-     * Null amount is treated as 0.
-     */
     private Double getRevenue(
             HostelAdmissionForm admission) {
 
