@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admissionDashboard")
 @RequiredArgsConstructor
 public class HostelAdmissionDashboardController {
 
     private final HostelAdmissionDashboardService dashboardService;
 
 
-    @GetMapping("/summary")
+    @GetMapping("/getAdmissionCountForCards")
     public ResponseEntity<HostelAdmissionDashboardResponseDTO> getDashboardSummary(
             @RequestParam String role,
             @RequestParam String email) {
@@ -32,7 +31,7 @@ public class HostelAdmissionDashboardController {
     }
 
 
-    @GetMapping("/date-wise")
+    @GetMapping("/getAdmissionCountByMonthAndYear")
     public ResponseEntity<List<HostelAdmissionDateWiseDataDTO>> getDateWiseData(
             @RequestParam Integer month,
             @RequestParam Integer year,
@@ -45,7 +44,7 @@ public class HostelAdmissionDashboardController {
     }
 
 
-    @GetMapping("/timeframe")
+    @GetMapping("/getAdmissionCountBytimeframe")
     public ResponseEntity<List<HostelAdmissionTimeframeDataDTO>> getTimeframeData(
             @RequestParam String role,
             @RequestParam String email) {
@@ -56,7 +55,7 @@ public class HostelAdmissionDashboardController {
     }
 
 
-    @GetMapping("/month-wise")
+    @GetMapping("/getAdmissionCountByMonth")
     public ResponseEntity<List<HostelAdmissionMonthWiseDataDTO>> getMonthWiseData(
             @RequestParam Integer year,
             @RequestParam String role,
